@@ -1,12 +1,11 @@
 const
   express = require('express'),
+  app = express(),
   path = require('path'),
   logger = require('morgan'),
   bodyParser = require('body-parser'),
-  index = require('./routes/index'),
-  users = require('./routes/users'),
-  app = express(),
-  port = process.env.PORT || '3000'
+  port = process.env.PORT || 3000,
+  models = require('./models')
 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
@@ -14,10 +13,11 @@ app.set('view engine', 'ejs')
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(require('method-override')('_method'))
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use('/', index)
-app.use('/users', users)
+app.use('/', require('./routes/index'))
+app.use('/users', require('./routes/users'))
 
 app.use(function (req, res, next) {
   let err = new Error('Not Found')
@@ -35,4 +35,7 @@ app.use(function (err, req, res, next) {
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`)
+  models.sync()
+  .then(() => models.seed())
+  .catch(console.error)
 })

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon app.js"
+    "start:dev": "DATABASE_URL=postgres://localhost/acme-user-mentor nodemon app.js"
   },
   "dependencies": {
     "body-parser": "~1.17.1",
@@ -13,6 +13,7 @@
     "ejs": "^2.5.7",
     "express": "~4.15.2",
     "faker": "^4.1.0",
+    "method-override": "^2.3.9",
     "moch": "0.0.1",
     "morgan": "~1.8.1",
     "pg": "^7.1.2",

@@ -1,11 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang='en'>
   <head>
-    <title><%= title %></title>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=devide-width, initial-scale=1.0'>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <div class = 'container'>
+      <h1>A.C.M.E. User Page</h1>
+      <nav class = 'nav nav-tabs'>
+        <li <%if (typeof users == 'undefined') { %>class= 'active'<% } %>><a href='/'>Home</a></li>
+        <li <%if (typeof users !== 'undefined') { %>class= 'active'<% } %>><a href='/users'>Users</a></li>
+      </nav>
+    </div>
+
+    <%if (typeof users !== 'undefined') { %>
+    <div class = 'container'>
+    <div class = 'col-md-12'>
+      <form method='post' action='/users' class='row well'>
+        <div class='col-xs-12 col-md-10 form-group'>
+          <input name='name' placeholder='user name' class='form-control'/>
+        </div>
+        <div class='col-xs-4 col-md-2 form-group'>
+          <button class='btn btn-primary'>Add User</button>
+        </div>
+      </form>
+    </div>
+
+    <ol class='list-unstyled'>
+      <% users.forEach(function(user){ %>
+      <li class='row'>
+        <div class="col-xs-12 col-md-3">
+          <div class='panel panel-success'>
+            <div class='panel-heading'>
+              <%=user.name %>
+            </div>
+            <div class='panel-body'>
+              <form method='POST' action='/users/<%=user.id %>?_method=DELETE'>
+                <button class='btn btn-danger btn-xs'>Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class='col-xs-12 col-md-9'>
+          <%if (user.achievements.length > 0) { %>
+          <ul class='list'>
+            <% user.achievements.forEach(function(ach){ %>
+              <li>
+                <div class='col-xs-12 col-md-9'>
+                  <%=ach.description %>
+                </div>
+                <div class='col-xs-12 col-md-3'>
+                  <form method='POST' action='/users/<%=user.id %>/achievements/<%=ach.id %>?_method=DELETE'>
+                    <button class='btn btn-warning btn-xs'>Delete award</button>
+                  </form>
+                </div>
+              </li>
+            <% }); %>
+          </ul>
+          <% } %>
+          <div class='form-inline'>
+          <form method='post' action='/users/<%=user.id %>/achievements'>
+            <button class='btn btn-primary btn-xs'>Add an achivement</button>
+          </form>
+          <%if (user.achievements.length >= 2) { %>
+          <form method='POST' action='/users/<%=user.id %>'>
+            <button class='btn btn-success btn-xs'>Promote</button>
+          </form>
+          <% } %>
+          </div>
+        </div>
+
+      <li>
+      <% }); %>
+    </ol>
+
+    <% } %>
+
+    </div>
+
+    <%if (typeof userJSON !== 'undefined') { %>
+    <footer class = 'container'>
+      <div class ='well col-md-12 col-xl-8'>
+        <pre><%=userJSON %></pre>
+      </div>
+    </footer>
+    <% } %>
+
+    <script scr='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'></script>
   </body>
 </html>

@@ -2,14 +2,12 @@ const
   router = require('express').Router(),
   models = require('../models'),
   User = models.User,
-  redirect = (res) => { () => res.redirect('/users') }
+  redirect = res => { return () => res.redirect('/users') }
 
 router
   .get('/', (req, res, next) => {
     User.findUsersViewModel()
-      .then((viewModel) => {
-        res.render('users', viewModel)
-      })
+      .then((users) => res.render('index', {users}))
       .catch(next)
   })
 
@@ -26,19 +24,19 @@ router
   })
 
   .put('/:id', (req, res, next) => {
-    User.updateUserFromRequestBody(req.params.id, req.body)
+    User.updateUserFromReq(req.params.id, req.body)
       .then(redirect(res))
       .catch(next)
   })
 
-  .post('/:id/awards', (req, res, next) => {
-    User.generateAward(req.params.id)
+  .post('/:id/achievements', (req, res, next) => {
+    User.generateAchievement(req.params.id)
       .then(redirect(res))
       .catch(next)
   })
 
-  .delete('/:userId/awards/:id', (req, res, next) => {
-    User.removeAward(req.params.userId, req.params.id)
+  .delete('/:userId/achievements/:id', (req, res, next) => {
+    User.removeAchievement(req.params.userId, req.params.id)
       .then(redirect(res))
       .catch(next)
   })
