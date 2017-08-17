@@ -15,6 +15,14 @@ User.findUsersViewModel = function () {
   return User.findAll({
     order: [['id']],
     include: [{model: Achievement}, 'Mentor', 'Mentee']})
+    .then(users => {
+      users.forEach((u, i, arr) => {
+        u.candidates = arr.filter(c => {
+          return (c.id !== u.id) && (c.Mentor === null)
+        })
+      })
+      return users
+    })
 }
 
 User.destroyById = function (userId) {
@@ -22,10 +30,17 @@ User.destroyById = function (userId) {
 }
 
 User.updateUserFromReq = function (userId, reqBody) {
-  console.log(reqBody)
-  let MenteeId = reqBody.mentee
-  return User.update({MenteeId: MenteeId}, {where: {id: userId}})
-    .then(() => User.update({MentorId: userId}, {where: {id: MenteeId}}))
+  console.log(userId, reqBody)
+  let MenteeId = reqBody.mentee, mentor
+  return User.findOne({where: {id: userId}})
+    .then(_mentor => {
+      mentor = _mentor
+      return User.findOne({where: {id: MenteeId}})
+    })
+    .then(mentee => Promise.all([
+      mentee.setMentor(mentor),
+      mentor.setMentee(mentee)
+    ]))
 }
 
 User.generateAchievement = function (userId) {
@@ -34,6 +49,14 @@ User.generateAchievement = function (userId) {
 
 User.removeAchievement = function (userId, achId) {
   return Achievement.destroy({where: {id: achId}})
+    .then(() => User.findOne({where: {id: userId}, include: [{model: Achievement}]}))
+    .then((mentor) => {
+      if (mentor.achievements.length < 2) {
+        return User.findOne({where: {id: mentor.MenteeId}})
+          .then(mentee => mentee.setMentor(null))
+          .then(() => mentor.setMentee(null))
+      }
+    })
 }
 
 module.exports = User

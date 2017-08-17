@@ -43,31 +43,30 @@
             <div class='panel-body'>
               <div class = 'status'>
                 &#x2B50;
-                <%if (user.Mentee.length >= 2) { %>
+                <%if (user.Mentee !== null) { %>
                 &#x2B50;
                 <% } %>
-                 <%if (user.achievements.length >= 5) { %>
+                 <%if (user.achievements.length >= 5 && user.Mentee !== null) { %>
                 &#x2B50;
                 <% } %>
               </div>
 
-              <%if (user.achievements.length >= 2) { %>
+              <%if (user.achievements.length >= 2 && user.Mentee===null) { %>
               <form method='POST' action='/users/<%=user.id %>?_method=PUT' class='form-group'>
                 <label class='sr-only' for='mentee'>Choose Mentee</label>
                 <select class='custom-select'  id='mentee' name='mentee'>
                   <option selected>Choose...</option>
-                  <% users.forEach(function(user){ %>
-                    <option value='<%=user.id %>'><%=user.name %></option>
+                  <% user.candidates.forEach(function(candidate){ %>
+                    <option value='<%=candidate.id %>'><%=candidate.name %></option>
                   <% }) %>
                 </select>
                 <button class='btn btn-success btn-sm'>Mentor This Promising Kid</button>
               </form>
               <% } %>
 
-
               <%if (user.Mentor !== null) { %>
               <div>
-                Mentored By:
+                Mentor:
                 <%=user.Mentor.name %>
               </div>
               <% } %>
