@@ -3,9 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start:production": "node app.js",
-    "start:dev": "DATABASE_URL=postgres://localhost/acme-user-mentor nodemon app.js",
-    "start": "npm run start:dev"
+    "start": "node app.js",
+    "start:dev": "DATABASE_URL=postgres://localhost/acme-user-mentor nodemon app.js"
   },
   "dependencies": {
     "body-parser": "~1.17.1",
