@@ -5,6 +5,8 @@ const
 
 Achievement.belongsTo(User)
 User.hasMany(Achievement)
+User.hasOne(User, { as: 'Mentor' })
+User.belongsTo(User, { as: 'Mentee' })
 
 const sync = () => conn.sync({ force: true })
 

@@ -17,62 +17,93 @@
 
     <%if (typeof users !== 'undefined') { %>
     <div class = 'container'>
+
     <div class = 'col-md-12'>
       <form method='post' action='/users' class='row well'>
-        <div class='col-xs-12 col-md-10 form-group'>
+        <div class='col-xs-12 col-md-10'>
           <input name='name' placeholder='user name' class='form-control'/>
         </div>
-        <div class='col-xs-4 col-md-2 form-group'>
+        <div class='col-xs-4 col-md-2'>
           <button class='btn btn-primary'>Add User</button>
         </div>
       </form>
     </div>
 
-    <ol class='list-unstyled'>
+    <ol class='list-unstyled col-md-12'>
       <% users.forEach(function(user){ %>
-      <li class='row'>
+      <li class='row panel'><div class='panel-body well'>
         <div class="col-xs-12 col-md-3">
           <div class='panel panel-success'>
-            <div class='panel-heading'>
-              <%=user.name %>
-            </div>
+            <form method='post' action='/users/<%=user.id %>/achievements' class='panel-heading'>
+              <button class ='icon-button'>
+                <%=user.name %> <i class='glyphicon glyphicon-minus-sign'></i>
+              </button>
+            </form>
+
             <div class='panel-body'>
-              <form method='POST' action='/users/<%=user.id %>?_method=DELETE'>
-                <button class='btn btn-danger btn-xs'>Delete</button>
+              <div class = 'status'>
+                &#x2B50;
+                <%if (user.Mentee.length >= 2) { %>
+                &#x2B50;
+                <% } %>
+                 <%if (user.achievements.length >= 5) { %>
+                &#x2B50;
+                <% } %>
+              </div>
+
+              <%if (user.achievements.length >= 2) { %>
+              <form method='POST' action='/users/<%=user.id %>?_method=PUT' class='form-group'>
+                <label class='sr-only' for='mentee'>Choose Mentee</label>
+                <select class='custom-select'  id='mentee' name='mentee'>
+                  <option selected>Choose...</option>
+                  <% users.forEach(function(user){ %>
+                    <option value='<%=user.id %>'><%=user.name %></option>
+                  <% }) %>
+                </select>
+                <button class='btn btn-success btn-sm'>Mentor This Promising Kid</button>
               </form>
+              <% } %>
+
+
+              <%if (user.Mentor !== null) { %>
+              <div>
+                Mentored By:
+                <%=user.Mentor.name %>
+              </div>
+              <% } %>
             </div>
           </div>
         </div>
 
-        <div class='col-xs-12 col-md-9'>
-          <%if (user.achievements.length > 0) { %>
-          <ul class='list'>
-            <% user.achievements.forEach(function(ach){ %>
-              <li>
-                <div class='col-xs-12 col-md-9'>
-                  <%=ach.description %>
-                </div>
-                <div class='col-xs-12 col-md-3'>
-                  <form method='POST' action='/users/<%=user.id %>/achievements/<%=ach.id %>?_method=DELETE'>
-                    <button class='btn btn-warning btn-xs'>Delete award</button>
-                  </form>
-                </div>
-              </li>
-            <% }); %>
-          </ul>
-          <% } %>
-          <div class='form-inline'>
-          <form method='post' action='/users/<%=user.id %>/achievements'>
-            <button class='btn btn-primary btn-xs'>Add an achivement</button>
-          </form>
-          <%if (user.achievements.length >= 2) { %>
-          <form method='POST' action='/users/<%=user.id %>'>
-            <button class='btn btn-success btn-xs'>Promote</button>
-          </form>
-          <% } %>
+        <div class='col-xs-12 col-md-9 row'>
+          <div class='panel panel-success'>
+            <form method='post' action='/users/<%=user.id %>/achievements' class='panel-heading'>
+              <button class ='icon-button'>
+                Add an achivement <i class='glyphicon glyphicon-plus-sign'></i>
+              </button>
+            </form>
+
+            <div class='panel-body'>
+              <%if (user.achievements.length > 0) { %>
+              <ul class='list-unstyled col-xs-12'>
+                <% user.achievements.forEach(function(ach){ %>
+                  <li>
+                    <div class='achievement col-xs-12 col-md-9'>
+                      <i class='glyphicon glyphicon-ok-circle'></i> <%=ach.description %>
+                    </div>
+                    <div class='col-xs-12 col-md-3'>
+                      <form method='POST' action='/users/<%=user.id %>/achievements/<%=ach.id %>?_method=DELETE'>
+                        <button class='btn btn-warning btn-sm'>Delete award</button>
+                      </form>
+                    </div>
+                  </li>
+                <% }); %>
+              </ul>
+              <% } %>
+            </div>
           </div>
         </div>
-
+      </div>
       <li>
       <% }); %>
     </ol>

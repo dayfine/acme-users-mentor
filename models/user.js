@@ -12,7 +12,9 @@ const User = conn.define('user', {
 })
 
 User.findUsersViewModel = function () {
-  return User.findAll({include: [{model: Achievement}]})
+  return User.findAll({
+    order: [['id']],
+    include: [{model: Achievement}, 'Mentor', 'Mentee']})
 }
 
 User.destroyById = function (userId) {
@@ -20,7 +22,10 @@ User.destroyById = function (userId) {
 }
 
 User.updateUserFromReq = function (userId, reqBody) {
-  return User.update({}, {where: {id: userId}})
+  console.log(reqBody)
+  let MenteeId = reqBody.mentee
+  return User.update({MenteeId: MenteeId}, {where: {id: userId}})
+    .then(() => User.update({MentorId: userId}, {where: {id: MenteeId}}))
 }
 
 User.generateAchievement = function (userId) {

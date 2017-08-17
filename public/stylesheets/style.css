@@ -1,8 +1,42 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 18px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
 }
+
+.panel, .well {
+  padding-left: 0;
+  padding-right: 0;
+  margin-bottom: 5px;
+  height: 100%
+}
+
+.panel-body {
+  min-height: 200px
+}
+
+.panel-heading {
+  min-height: 55px
+}
+
+.achievement {
+  padding: 5px 0px;
+}
+
+.status {
+  margin-bottom: 20px
+}
+
+.icon-button {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    border: 0;
+    background: transparent;
+}
+
+

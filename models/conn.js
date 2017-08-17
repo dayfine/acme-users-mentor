@@ -1,5 +1,5 @@
-const sequelize = require('sequelize')
+const Sequelize = require('sequelize')
 
-module.exports = new sequelize(process.env.DATABASE_URL, {
+module.exports = new Sequelize(process.env.DATABASE_URL, {
   logging: false
 })
